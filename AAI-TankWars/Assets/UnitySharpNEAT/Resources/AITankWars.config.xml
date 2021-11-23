@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+    <Config>
+      <ExperimentName>AITankWars</ExperimentName>
+      <PopulationSize>50</PopulationSize>
+      <SpecieCount>10</SpecieCount>
+      <Activation>
+        <Scheme>Acyclic</Scheme>
+      </Activation>
+      <ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
+      <ComplexityThreshold>84</ComplexityThreshold>
+      <Description>AI Tank learn to destroy enemy tanks</Description>
+    </Config>

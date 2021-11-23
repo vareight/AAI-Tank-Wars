@@ -1,0 +1,142 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &635230746762697589
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3828565951342428853, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.5896988
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828565951342428853, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 0.5896988
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828565951342428853, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_Offset.x
+      value: 0.0034046173
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828565951342428853, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_Offset.y
+      value: -0.0037162304
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828565951352539378, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.16687435
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828565951352539378, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.572379
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828565951352539378, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.7075472
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.064086
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.3005457
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.8879395
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876968, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876983, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_Name
+      value: StaticEnemy-Gold
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894307371565876983, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 8541870746915504463, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: OnDead.m_PersistentCalls.m_Calls.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8541870746915504463, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: OnDead.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8541870746915504463, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: OnDead.m_PersistentCalls.m_Calls.Array.data[3].m_Target
+      value: 
+      objectReference: {fileID: 4746002805217507159, guid: b6044fbd0105eb54d90e91bdba4bbe1c,
+        type: 3}
+    - target: {fileID: 8541870746915504463, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: OnDead.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8541870746915504463, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: OnDead.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
+      value: TankKilled
+      objectReference: {fileID: 0}
+    - target: {fileID: 8541870746915504463, guid: a2f75538cd7c933478187ea734031928,
+        type: 3}
+      propertyPath: OnDead.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a2f75538cd7c933478187ea734031928, type: 3}
