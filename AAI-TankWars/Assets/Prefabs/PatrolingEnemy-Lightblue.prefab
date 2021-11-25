@@ -846,6 +846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb2d: {fileID: 0}
   movementData: {fileID: 11400000, guid: f5a7b272d610ca448a34b75d5ff13cac, type: 2}
+  currentSpeed: 0
   OnSpeedChange:
     m_PersistentCalls:
       m_Calls:
@@ -875,7 +876,7 @@ GameObject:
   - component: {fileID: 7627752442282422219}
   - component: {fileID: 2679259128062504661}
   m_Layer: 13
-  m_Name: EnemyTank
+  m_Name: EnemyTank-LightBlue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -963,6 +964,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79b282f1a70726642bf752ed41c5c8b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hits: 0
   MaxHealth: 50
   health: 0
   OnDead:

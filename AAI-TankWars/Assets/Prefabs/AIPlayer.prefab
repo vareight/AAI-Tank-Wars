@@ -649,6 +649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb2d: {fileID: 0}
   movementData: {fileID: 11400000, guid: 254219ce83ab7fe41ae0416b67c1919f, type: 2}
+  currentSpeed: 0
   OnSpeedChange:
     m_PersistentCalls:
       m_Calls:
@@ -678,7 +679,7 @@ GameObject:
   - component: {fileID: 8080437649142594577}
   - component: {fileID: 4383938330915110159}
   m_Layer: 13
-  m_Name: EnemyTank
+  m_Name: EnemyTank-AI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -766,14 +767,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79b282f1a70726642bf752ed41c5c8b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hits: 0
   MaxHealth: 100
   health: 0
   OnDead:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4991602012080028594}
-        m_MethodName: DestroyHelper
-        m_Mode: 1
+      - m_Target: {fileID: 4991602012080028585}
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1067,6 +1069,8 @@ GameObject:
   - component: {fileID: 4991602012080028598}
   - component: {fileID: 4991602012080028594}
   - component: {fileID: 5049823624355291366}
+  - component: {fileID: 8822990268845550141}
+  - component: {fileID: 6057064146071655580}
   m_Layer: 13
   m_Name: AIPlayer
   m_TagString: Enemy
@@ -1114,12 +1118,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2644d7cc6a1f34bb3d35bd3f6b86fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tank: {fileID: 0}
+  tank: {fileID: 3713329460465827817}
+  tankMover: {fileID: 0}
+  shootBehaviour: {fileID: 8822990268845550141}
+  patrolBehaviour: {fileID: 6057064146071655580}
+  detector: {fileID: 4383938330390865876}
+  damageble: {fileID: 0}
   SensorRange: 20
   hp: 100
-  enemiesDestroyed: 0
+  enemiesHit: 0
   bulletsShot: 0
   obstaclesHit: 0
+  numHits: 0
+--- !u!114 &8822990268845550141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4991602012080028585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16efaeffccb879a4b876ae141343a6da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fieldOfVisionForShooting: 60
+--- !u!114 &6057064146071655580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4991602012080028585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63a7aec4ceb913946b91fffa354868bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolDelay: 4
+  randomDirection: {x: 0, y: 0}
+  currentPatrolDelay: 0
 --- !u!1 &5720224764562443757
 GameObject:
   m_ObjectHideFlags: 0

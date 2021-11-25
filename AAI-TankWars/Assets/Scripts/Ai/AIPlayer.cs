@@ -12,15 +12,28 @@ public class AIPlayer : UnitController
     [SerializeField]
     private TankMover tankMover;
 
+    [SerializeField]
+    private AIBehaviour shootBehaviour, patrolBehaviour;
+
+    [SerializeField]
+    private AIDetector detector;
+
+    [SerializeField]
+    private Damagable damageble;
+
+    GameObject[] enemyTanks;
+    float totHealth;
+
     // general control variables
     //public float Speed = 5f;
     //public float TurnSpeed = 180f;
     public float SensorRange = 20;
 
     public int hp = 100;
-    public int enemiesDestroyed = 0;
+    public int enemiesHit = 0;
     public int bulletsShot = 0;
     public int obstaclesHit = 0;
+    public int numHits = 0;
 
     /** SENSORS
      * 0) obstacles
@@ -36,14 +49,23 @@ public class AIPlayer : UnitController
     private void Start()
     {
         // cache the inital transform of this Unit, so that when the Unit gets reset, it gets put into its initial state
-        _initialPosition = transform.position;
-        _initialRotation = transform.rotation;
+        _initialPosition = tank.transform.position;
+        _initialRotation = tank.transform.rotation;
+        enemyTanks = GameObject.FindGameObjectsWithTag("Enemy");
+        totHealth = 0f;
+//        foreach (GameObject tank in enemyTanks)
+        //{
+          //  var damageble = tank.GetComponentInChildren<Damagable>();
+            //totHealth += damageble.Health;
+        //}
     }
 
     private void Awake()
     {
         tank = GetComponentInChildren<TankController>();
-        tankMover = GetComponentInChildren<TankMover>();
+        tankMover = tank.GetComponentInChildren<TankMover>();
+        detector = GetComponentInChildren<AIDetector>();
+        damageble = tank.GetComponentInChildren<Damagable>();
         //var damagable = transform.GetComponentInChildren<Damagable>();
         //hp = damagable.Health;
     }
@@ -54,9 +76,29 @@ public class AIPlayer : UnitController
 
         // The performance of this unit, i.e. it's fitness, is retrieved by this function.
         // Implement a meaningful fitness function here
-        //float result = hp + 10 * enemiesDestroyed - bulletsShot - obstaclesHit;
-        float result = tankMover.currentSpeed;
-        return result;
+        //float result = hp + 10 * enemiesDestroyed + bulletsShot - obstaclesHit;
+        
+
+        //GameObject[] currentEnemyTanks = GameObject.FindGameObjectsWithTag("Player");
+        //float currentTotHealth = 0f;
+        foreach (GameObject tank in enemyTanks)
+        {
+            var dmg = tank.GetComponentInChildren<Damagable>();
+            totHealth+= dmg.Health;
+        }
+
+        
+        numHits = damageble.Hits;
+        //Debug.Log(totHealth + "/" + currentTotHealth);
+        //float result = tankMover.currentSpeed + bulletsShot + totHealth - currentTotHealth;
+        //float result = enemiesHit + tankMover.currentSpeed;
+        //Debug.Log("hits: " + numHits);
+        float velocity = Mathf.Sqrt(Mathf.Pow(tankMover.rb2d.velocity.x, 2) + Mathf.Pow(tankMover.rb2d.velocity.y, 2));
+        float result = this.damageble.Health - totHealth/20f + velocity;
+        if (result < 0)
+            return 0;
+        else
+            return result;
     }
 
     protected override void HandleIsActiveChanged(bool newIsActive)
@@ -66,21 +108,31 @@ public class AIPlayer : UnitController
         // Since NeatSupervisor.cs is making use of Object Pooling, this Unit will never get destroyed. 
         // Make sure that when IsActive gets set to false, the variables and the Transform of this Unit are reset!
         // Consider to also disable MeshRenderers until IsActive turns true again.
-        if (transform != null)
-        {
+        //if (transform != null)
+        //{
             if (newIsActive == false)
             {
                 // the unit has been deactivated, IsActive was switched to false
 
                 // reset transform
-                transform.position = _initialPosition;
-                transform.rotation = _initialRotation;
+                tank.transform.position = _initialPosition;
+                tank.transform.rotation = _initialRotation;
 
                 // reset members
                 hp = 100;
-                enemiesDestroyed = 0;
+                /*foreach (GameObject tank in enemyTanks)
+                {
+                    var damageble = tank.GetComponentInChildren<Damagable>();
+                    damageble.hits = 0;
+                }*/
+                numHits = 0;
+                enemiesHit = 0;
+                damageble.Hits = 0;
                 bulletsShot = 0;
                 obstaclesHit = 0;
+                ResetSensors();
+                this.damageble.Health = 100;
+                this.gameObject.SetActive(true);
             }
 
             // hide/show children 
@@ -89,7 +141,7 @@ public class AIPlayer : UnitController
             //{
             //    t.gameObject.SetActive(newIsActive);
             //}
-        }
+        //}
     }
 
     protected override void UpdateBlackBoxInputs(ISignalArray inputSignalArray)
@@ -125,6 +177,7 @@ public class AIPlayer : UnitController
                 inputSignalArray[3 * i + j] = sensors[i][j];
             }
         }
+        LogSensors();
     }
 
     protected override void UseBlackBoxOutpts(ISignalArray outputSignalArray)
@@ -152,28 +205,41 @@ public class AIPlayer : UnitController
          * HOW to implement these 3 behaviours will be told by simpler AI algorithms.
          */
 
-        //int shootAction = (int)outputSignalArray[0] * 2 - 1; //sparare o non sparare
-        //var shootingAngle = (float)outputSignalArray[1] * 2 - 1;
+        //float shootAction = (float)outputSignalArray[2] * 2 - 1; //sparare o non sparare
+        //var shootingX = (float)outputSignalArray[3] * 2 - 1;
+        //var shootingY = (float)outputSignalArray[4] * 2 - 1;
 
-        var moveToX = (float)outputSignalArray[0] * 2 - 1;
-        var moveToY = (float)outputSignalArray[1] * 2 - 1;
+        var shootAction = (float)outputSignalArray[0] * 2 - 1; // *********THIS IS OK*************
+        //var dodgeAction = (float)outputSignalArray[3] * 2 - 1;
+        var moveToX = (float)outputSignalArray[1] * 2 - 1;
+        var moveToY = (float)outputSignalArray[2] * 2 - 1;
 
-        var moveDist = moveToX * tankMover.movementData.acceleration * Time.deltaTime;
-        var turnAngle = moveToY * tankMover.movementData.rotationSpeed * Time.deltaTime * moveDist;
+        //var moveDist = moveToX * tankMover.movementData.acceleration * Time.fixedDeltaTime;
+        //var turnAngle = moveToY * tankMover.movementData.rotationSpeed * Time.fixedDeltaTime * moveDist;
+        //Debug.Log("move to: "+ moveDist + " - " + turnAngle);
+        if (moveToX != 0 && moveToY != 0)
+            Debug.Log("X: "+ moveToX + " - Y: " + moveToY);
 
         //float shootingAngleX = Mathf.Cos(shootingAngle);
         //float shootingAngleY = Mathf.Sin(shootingAngle);
 
-        Vector2 moveTo = new Vector2(moveDist, turnAngle);
-        //Vector2 shootTo = new Vector2(shootingAngleX, shootingAngleY);
+        Vector2 moveTo = new Vector2(moveToX, moveToY);
+        //Vector2 shootTo = new Vector2(shootingX, shootingY);
 
         tank.HandleMoveBody(moveTo);
         //tank.HandleTurretMovement(shootTo);
-        //if (shootAction == 1)
-        //{
-        //    tank.HandleShoot();
-        //    bulletsShot++;
-        //}
+         // *********THIS IS OK*************
+        if (shootAction <0.5)
+        {
+            if (detector.TargetVisible)
+            {
+                shootBehaviour.PerformAction(tank, detector);
+            }
+            else
+            {
+                patrolBehaviour.PerformAction(tank, detector);
+            }
+        }
     }
     private int CheckCollision(RaycastHit hit)
     {
@@ -284,7 +350,25 @@ public class AIPlayer : UnitController
             }
         }
     }
+    
+    private void ResetSensors()
+    {
+        /**
+         * 1) front left -> clockwise [...] -> 8) left
+         */
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                sensors[i][j] = 0;
+            }
+        }
+    }
 
+    private void LogSensors()
+    {
+        Debug.Log(sensors.ToString());
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -296,4 +380,10 @@ public class AIPlayer : UnitController
         }
     }
 
+    /*public void TargetHit()
+    {
+        enemiesHit++;
+        Debug.Log("HIT!");
+    }
+    */
 }

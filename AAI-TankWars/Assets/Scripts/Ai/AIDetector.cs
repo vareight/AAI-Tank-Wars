@@ -36,7 +36,9 @@ public class AIDetector : MonoBehaviour
     private void Update()
     {
         if (Target != null)
-            TargetVisible = CheckTargetVisible();
+        TargetVisible = CheckTargetVisible();
+        
+        
     }
 
     private bool CheckTargetVisible()
@@ -55,6 +57,7 @@ public class AIDetector : MonoBehaviour
             CheckIfPlayerInRange();
         else if (Target != null)
             DetectIfOutOfRange();
+        
     }
 
     private void DetectIfOutOfRange()
@@ -68,9 +71,10 @@ public class AIDetector : MonoBehaviour
     private void CheckIfPlayerInRange()
     {
         Collider2D collision = Physics2D.OverlapCircle(transform.position, viewRadius, playerLayerMask);
-        if (collision != null)
+        if (collision != null && collision.transform != this.transform.parent)
         {
             Target = collision.transform;
+            //Debug.Log(this.transform.parent.ToString());
         }
     }
 

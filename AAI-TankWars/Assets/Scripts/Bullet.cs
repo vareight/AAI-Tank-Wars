@@ -47,6 +47,7 @@ public class Bullet : MonoBehaviour
         if (damagable != null)
         {
             damagable.Hit(bulletData.damage);
+            //damagable.Heal(bulletData.damage);
         }
 
         DisableObject();

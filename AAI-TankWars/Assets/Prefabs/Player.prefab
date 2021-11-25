@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2887840065536451731}
   - component: {fileID: 2887840065536451729}
   - component: {fileID: 2887840065536451728}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 2887840066242708560}
   - component: {fileID: 2887840066242708561}
   - component: {fileID: 2887840066242708563}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ReloadSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,7 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2887840066625056543}
   - component: {fileID: 2887840066625056542}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -275,7 +275,7 @@ GameObject:
   - component: {fileID: 2887840066659940626}
   - component: {fileID: 2887840066659940624}
   - component: {fileID: 2887840066659940627}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -525,7 +525,7 @@ PrefabInstance:
     - target: {fileID: 8560743577678458599, guid: 8ef0ad234f12e714e8ee6d91b7a5678f,
         type: 3}
       propertyPath: bulletPoolCount
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8560743577678458599, guid: 8ef0ad234f12e714e8ee6d91b7a5678f,
         type: 3}
