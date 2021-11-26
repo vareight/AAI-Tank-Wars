@@ -502,7 +502,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turretBarrels:
   - {fileID: 3713329459199576151}
-  turretData: {fileID: 11400000, guid: 2cabedb544382424c8a6ecec303f8dd3, type: 2}
+  turretData: {fileID: 11400000, guid: ea5f30522a57d4646990fbcffd4608f9, type: 2}
   bulletPoolCount: 10
   OnShoot:
     m_PersistentCalls:
@@ -909,7 +909,7 @@ MonoBehaviour:
   target: {fileID: 0}
   playerLayerMask:
     serializedVersion: 2
-    m_Bits: 12288
+    m_Bits: 4096
   visibilityLayer:
     serializedVersion: 2
     m_Bits: 13312

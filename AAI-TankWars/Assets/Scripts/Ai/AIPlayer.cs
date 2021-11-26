@@ -41,6 +41,7 @@ public class AIPlayer : UnitController
      * 2) bullets
      */
     private float[][] sensors = new float[8][];
+    private GameObject[] trainingTanks;
 
     // cache the initial transform of this unit, to reset it on deactivation
     private Vector3 _initialPosition = default;
@@ -53,11 +54,12 @@ public class AIPlayer : UnitController
         _initialRotation = tank.transform.rotation;
         enemyTanks = GameObject.FindGameObjectsWithTag("Enemy");
         totHealth = 0f;
-//        foreach (GameObject tank in enemyTanks)
+        //        foreach (GameObject tank in enemyTanks)
         //{
-          //  var damageble = tank.GetComponentInChildren<Damagable>();
-            //totHealth += damageble.Health;
+        //  var damageble = tank.GetComponentInChildren<Damagable>();
+        //totHealth += damageble.Health;
         //}
+        trainingTanks = GameObject.FindGameObjectsWithTag("Player");
     }
 
     private void Awake()
@@ -133,6 +135,14 @@ public class AIPlayer : UnitController
                 ResetSensors();
                 this.damageble.Health = 100;
                 this.gameObject.SetActive(true);
+                
+                foreach (GameObject tt in trainingTanks)
+                {
+                    tt.SetActive(true);
+                    var dmg = GetComponentInChildren<Damagable>();
+                    dmg.Health = dmg.MaxHealth;
+                    //dmg.Heal(dmg.MaxHealth);
+                }
             }
 
             // hide/show children 
@@ -177,7 +187,7 @@ public class AIPlayer : UnitController
                 inputSignalArray[3 * i + j] = sensors[i][j];
             }
         }
-        LogSensors();
+        //LogSensors();
     }
 
     protected override void UseBlackBoxOutpts(ISignalArray outputSignalArray)
@@ -239,6 +249,10 @@ public class AIPlayer : UnitController
             {
                 patrolBehaviour.PerformAction(tank, detector);
             }
+        }
+        else
+        {
+            Debug.Log(transform.ToString()+" don't shoot");
         }
     }
     private int CheckCollision(RaycastHit hit)

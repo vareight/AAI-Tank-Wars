@@ -22,7 +22,7 @@ TagManager:
   - ObstaclesMovement
   - Player
   - Enemy
-  - 
+  - BulletAI
   - 
   - 
   - 
