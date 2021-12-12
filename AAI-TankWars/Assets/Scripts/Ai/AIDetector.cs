@@ -36,12 +36,12 @@ public class AIDetector : MonoBehaviour
     private void Update()
     {
         if (Target != null)
-            TargetVisible = CheckTargetVisible();
+            TargetVisible = CheckTargetVisible(Target);
     }
 
-    private bool CheckTargetVisible()
+    private bool CheckTargetVisible(Transform target)
     {
-        var result = Physics2D.Raycast(transform.position, Target.position - transform.position, viewRadius, visibilityLayer);
+        var result = Physics2D.Raycast(transform.position, target.position - transform.position, viewRadius, visibilityLayer);
         if (result.collider != null)
         {
             return (playerLayerMask & (1 << result.collider.gameObject.layer)) != 0;
@@ -51,11 +51,15 @@ public class AIDetector : MonoBehaviour
 
     private void DetectTarget()
     {
-        if (Target == null)
+        /*if (Target == null)
             CheckIfPlayerInRange();
         else if (Target != null)
             DetectIfOutOfRange();
+        */
         
+        if (Target != null)
+            DetectIfOutOfRange();
+        CheckIfPlayerInRange();
     }
 
     private void DetectIfOutOfRange()
@@ -68,12 +72,32 @@ public class AIDetector : MonoBehaviour
 
     private void CheckIfPlayerInRange()
     {
-        Collider2D collision = Physics2D.OverlapCircle(transform.position, viewRadius, playerLayerMask);
-        if (collision != null) //&& collision.transform != this.transform.parent)
+        /*Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, viewRadius, playerLayerMask);
+        float minDistance = float.PositiveInfinity;
+        if (collisions != null) //&& collision.transform != this.transform.parent)
         {
-            Target = collision.transform;
+            foreach (Collider2D collider in collisions)
+            {
+                if (Vector2.Distance(collider.transform.position, transform.position) < minDistance && CheckTargetVisible(collider.transform))
+                {
+                    minDistance = Vector2.Distance(collider.transform.position, transform.position);
+                    Target = collider.transform;
+                    TargetVisible = true;
+                }
+            }
             //Debug.Log(this.transform.parent.ToString());
+        }*/
+        for (int i = 1; i <= viewRadius; i++)
+        {
+            Collider2D collision = Physics2D.OverlapCircle(transform.position, i, playerLayerMask);
+            if (collision != null && CheckTargetVisible(collision.transform))
+            {
+                Target = collision.transform;
+                TargetVisible = true;
+                break;
+            }
         }
+
     }
 
     IEnumerator DetectionCoroutine()

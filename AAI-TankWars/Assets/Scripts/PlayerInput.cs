@@ -12,6 +12,10 @@ public class PlayerInput : MonoBehaviour
     public UnityEvent OnShoot = new UnityEvent();
     public OnMoveBodyEvent OnMoveBody = new OnMoveBodyEvent();
     public OnMoveTurretEvent OnMoveTurret = new OnMoveTurretEvent();
+    // visibility mask for the inputs
+    [SerializeField]
+    private LayerMask visibilityLayer;
+
 
     private void Awake()
     {
@@ -50,7 +54,10 @@ public class PlayerInput : MonoBehaviour
 
     private void GetBodyMovement()
     {
-        Vector2 movementVector = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        OnMoveBody?.Invoke(movementVector.normalized);
+        Vector2 movementVector = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        //Debug.Log("movVect: (" + movementVector.x + ", " + movementVector.y + ")");
+        OnMoveBody?.Invoke(movementVector);
     }
+
+    
 }

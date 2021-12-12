@@ -70,6 +70,16 @@
     <Compile Include="Assets\Scripts\Ai\AIPatrolStaticBehaviour.cs" />
     <Compile Include="Assets\Scripts\Ai\AIPlayer.cs" />
     <Compile Include="Assets\Scripts\Ai\AiShootBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Ai\Astar\CreateGrid.cs" />
+    <Compile Include="Assets\Scripts\Ai\Astar\MyGrid.cs" />
+    <Compile Include="Assets\Scripts\Ai\Astar\PNode.cs" />
+    <Compile Include="Assets\Scripts\Ai\Astar\PathNode.cs" />
+    <Compile Include="Assets\Scripts\Ai\Astar\Pathfinding.cs" />
+    <Compile Include="Assets\Scripts\Ai\Astar\TankGrid.cs" />
+    <Compile Include="Assets\Scripts\Ai\Astar\TankPathNode.cs" />
+    <Compile Include="Assets\Scripts\Ai\Astar\TankPathfinding.cs" />
+    <Compile Include="Assets\Scripts\Ai\Astar\Testing.cs" />
+    <Compile Include="Assets\Scripts\Ai\Astar\WorldTile.cs" />
     <Compile Include="Assets\Scripts\Ai\DefaultEnemyAI.cs" />
     <Compile Include="Assets\Scripts\Ai\PatrolPath.cs" />
     <Compile Include="Assets\Scripts\AimTurret.cs" />
@@ -81,12 +91,14 @@
     <Compile Include="Assets\Scripts\DestroyIfDisabled.cs" />
     <Compile Include="Assets\Scripts\DestroyOnAudioFinishPlaying.cs" />
     <Compile Include="Assets\Scripts\DestroyUtil.cs" />
+    <Compile Include="Assets\Scripts\Direction.cs" />
     <Compile Include="Assets\Scripts\DisableUtil.cs" />
     <Compile Include="Assets\Scripts\EngineAudio.cs" />
     <Compile Include="Assets\Scripts\ExitLevel.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GamePlayController.cs" />
     <Compile Include="Assets\Scripts\InstantiateUtil.cs" />
+    <Compile Include="Assets\Scripts\KillCount.cs" />
     <Compile Include="Assets\Scripts\ObjectGeneratorRandomPositionUtil.cs" />
     <Compile Include="Assets\Scripts\ObjectPool.cs" />
     <Compile Include="Assets\Scripts\OnDataLoadedResultEvent.cs" />
@@ -817,6 +829,9 @@
     </Reference>
     <Reference Include="Unity.Rider.Editor">
       <HintPath>C:/Users/ricca/OneDrive/Documenti/GitHub/AAI-Tank-Wars/AAI-TankWars/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Tilemap.Editor">
+      <HintPath>C:/Users/ricca/OneDrive/Documenti/GitHub/AAI-Tank-Wars/AAI-TankWars/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.cinemachine.editor">
       <HintPath>C:/Users/ricca/OneDrive/Documenti/GitHub/AAI-Tank-Wars/AAI-TankWars/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>

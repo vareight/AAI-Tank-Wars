@@ -18,6 +18,7 @@ public class AIPatrolPathBehaviour : AIBehaviour
 
     private void Awake()
     {
+        this.endPath = false;
         if (patrolPath == null)
             patrolPath = GetComponentInChildren<PatrolPath>();
     }
@@ -26,19 +27,38 @@ public class AIPatrolPathBehaviour : AIBehaviour
     {
         if (!isWaiting)
         {
-            if (patrolPath.Length < 2)
+
+            if (this.endPath)
+            {
+                //Debug.Log("Fine");
+                tank.HandleMoveBody(Vector2.zero);
                 return;
+            }
+
+            if (patrolPath.Length < 2)
+            {
+                //tank.HandleMoveBody(Vector2.down);
+                return;
+            }
             if (!isInitialized)
             {
+                //Debug.Log("Inizializzo..");
                 var currentPathPoint = patrolPath.GetClosestPathPoint(tank.transform.position);
                 this.currentIndex = currentPathPoint.Index;
                 this.currentPatrolTarget = currentPathPoint.Position;
                 isInitialized = true;
+                //Debug.Log("index = " + currentIndex);
             }
+
+
+
             if (Vector2.Distance(tank.transform.position, currentPatrolTarget) < arriveDistance)
             {
                 isWaiting = true;
+
                 StartCoroutine(WaitCoroutine());
+
+                //patrolPath.DeletePreviousPathPoint(currentIndex);
                 return;
             }
             Vector2 directionToGo = currentPatrolTarget - (Vector2)tank.tankMover.transform.position;
@@ -48,7 +68,7 @@ public class AIPatrolPathBehaviour : AIBehaviour
             {
                 var crossProduct = Vector3.Cross(tank.tankMover.transform.up, directionToGo.normalized);
                 int rotationResult = crossProduct.z >= 0 ? -1 : 1;
-                tank.HandleMoveBody(new Vector2(rotationResult, 1));
+                tank.HandleMoveBody(new Vector2(rotationResult, 0));
             }
             else
             {
@@ -60,10 +80,24 @@ public class AIPatrolPathBehaviour : AIBehaviour
         IEnumerator WaitCoroutine()
         {
             yield return new WaitForSeconds(waitTime);
-            var nextPathPoint = patrolPath.GetNextPathPoint(currentIndex);
-            currentPatrolTarget = nextPathPoint.Position;
-            currentIndex = nextPathPoint.Index;
-            isWaiting = false;
+
+            if (currentIndex + 1 == patrolPath.Length)
+            {
+                //Debug.Log("index = " + currentIndex);
+                tank.HandleMoveBody(Vector2.down);
+                this.endPath = true;
+                currentIndex = -1;
+                isInitialized = false;
+                isWaiting = false;
+                //Debug.Log("Stop");
+            }
+            else
+            {
+                var nextPathPoint = patrolPath.GetNextPathPoint(currentIndex);
+                currentPatrolTarget = nextPathPoint.Position;
+                currentIndex = nextPathPoint.Index;
+                isWaiting = false;
+            }
         }
     }
 }

@@ -1189,9 +1189,9 @@ MonoBehaviour:
   OnDead:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 722383713575344167}
-        m_MethodName: DestroyHelper
-        m_Mode: 1
+      - m_Target: {fileID: 722383713575344188}
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

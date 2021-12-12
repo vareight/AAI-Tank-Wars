@@ -1342,6 +1342,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PatrolingEnemy-Blue
       objectReference: {fileID: 0}
+    - target: {fileID: 722383713575344188, guid: b70fb8937747ff441b0e2381f4469660,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8328623638976824385, guid: b70fb8937747ff441b0e2381f4469660,
         type: 3}
       propertyPath: viewRadius

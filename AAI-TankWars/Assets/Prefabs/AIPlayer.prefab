@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6288515850118179790}
   - component: {fileID: 638974029270206744}
   - component: {fileID: 6085258599464044484}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: HealthFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,13 +58,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.13664317, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 58500083f083e67448b287a5e4bfa5b9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1f130bf86c631c7498846a2e3de9c925, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -84,7 +84,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2862338653069888497}
   - component: {fileID: 7814036365924955912}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: SoundFeedback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 1690924702662946055}
   - component: {fileID: 7696440006702440878}
   - component: {fileID: 2158488115601402054}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,6 +327,53 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &811031078067575446
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2874897225516854188}
+  - component: {fileID: 8287294951233686403}
+  m_Layer: 0
+  m_Name: TankPath
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2874897225516854188
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811031078067575446}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.555, y: 0.401, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4991602012080028598}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8287294951233686403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811031078067575446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2c0a1cba25f6884e82e5e788e1b92e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolPoints: []
+  pointsColor: {r: 0, g: 0, b: 1, a: 1}
+  pointSize: 0.3
+  lineColor: {r: 1, g: 0, b: 1, a: 1}
 --- !u!1 &3713329459199576150
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,7 +383,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3713329459199576151}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -367,7 +414,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3713329459219814137}
   - component: {fileID: 3713329459219814142}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: TankTurretParent
   m_TagString: Untagged
   m_Icon: {fileID: 8418204508859773708, guid: 0000000000000000d000000000000000, type: 0}
@@ -414,7 +461,7 @@ GameObject:
   - component: {fileID: 3713329460066729270}
   - component: {fileID: 3713329460066729271}
   - component: {fileID: 434774024509938253}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: TankTurret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -535,6 +582,7 @@ MonoBehaviour:
   OnReloading:
     m_PersistentCalls:
       m_Calls: []
+  turretOwner: {fileID: 0}
 --- !u!114 &434774024509938253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,7 +610,7 @@ GameObject:
   - component: {fileID: 3713329460454569391}
   - component: {fileID: 3713329460454569388}
   - component: {fileID: 3713329460454569389}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: TankBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -650,6 +698,7 @@ MonoBehaviour:
   rb2d: {fileID: 0}
   movementData: {fileID: 11400000, guid: 254219ce83ab7fe41ae0416b67c1919f, type: 2}
   currentSpeed: 0
+  targetRotation: 0
   OnSpeedChange:
     m_PersistentCalls:
       m_Calls:
@@ -664,6 +713,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  pathVectorList: []
 --- !u!1 &3713329460465827813
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,7 +728,7 @@ GameObject:
   - component: {fileID: 3713329460465827817}
   - component: {fileID: 8080437649142594577}
   - component: {fileID: 4383938330915110159}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: EnemyTank-AI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -701,7 +751,7 @@ Transform:
   - {fileID: 4383938330390865879}
   - {fileID: 376947033012509978}
   m_Father: {fileID: 4991602012080028598}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &3713329460465827816
 Rigidbody2D:
@@ -752,9 +802,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8345610d78f69f743a6a4900575c8f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SensorRange: 3
+  visibilityLayer:
+    serializedVersion: 2
+    m_Bits: 0
   tankMover: {fileID: 0}
   aimTurret: {fileID: 0}
   turrets: []
+  dmgDealt: 0
+  tankKilled: 0
+  obstaclesHit: 0
 --- !u!114 &8080437649142594577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,7 +824,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79b282f1a70726642bf752ed41c5c8b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hits: 0
   MaxHealth: 100
   health: 0
   OnDead:
@@ -809,6 +865,17 @@ MonoBehaviour:
       - m_Target: {fileID: 4746002805217507159, guid: b6044fbd0105eb54d90e91bdba4bbe1c,
           type: 3}
         m_MethodName: TankKilled
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5049823624355291366}
+        m_MethodName: StopTimer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -871,7 +938,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4383938330390865879}
   - component: {fileID: 4383938330390865876}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: AiDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -904,15 +971,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adff3ccd2798b89428552ed16a66ff48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 5
+  viewRadius: 10
   detectionCheckDelay: 0.1
   target: {fileID: 0}
   playerLayerMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 8192
   visibilityLayer:
     serializedVersion: 2
-    m_Bits: 13312
+    m_Bits: 9216
   <TargetVisible>k__BackingField: 0
 --- !u!1 &4965303387146640370
 GameObject:
@@ -925,7 +992,7 @@ GameObject:
   - component: {fileID: 6649268884071723054}
   - component: {fileID: 2408060331196653222}
   - component: {fileID: 675002554020574164}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: EngineAudio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1070,10 +1137,11 @@ GameObject:
   - component: {fileID: 4991602012080028594}
   - component: {fileID: 5049823624355291366}
   - component: {fileID: 8822990268845550141}
-  - component: {fileID: 6057064146071655580}
-  m_Layer: 13
+  - component: {fileID: 4222915115163930566}
+  - component: {fileID: 3544160473902521827}
+  m_Layer: 12
   m_Name: AIPlayer
-  m_TagString: Enemy
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1089,6 +1157,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 2874897225516854188}
   - {fileID: 3713329460465827818}
   - {fileID: 2081952431798876904}
   m_Father: {fileID: 0}
@@ -1119,17 +1188,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tank: {fileID: 3713329460465827817}
-  tankMover: {fileID: 0}
   shootBehaviour: {fileID: 8822990268845550141}
-  patrolBehaviour: {fileID: 6057064146071655580}
+  patrolBehaviour: {fileID: 3544160473902521827}
   detector: {fileID: 4383938330390865876}
-  damageble: {fileID: 0}
-  SensorRange: 20
-  hp: 100
-  enemiesHit: 0
-  bulletsShot: 0
-  obstaclesHit: 0
-  numHits: 0
+  visibilityLayer:
+    serializedVersion: 2
+    m_Bits: 9216
+  dangerLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  SensorRange: 15
 --- !u!114 &8822990268845550141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1142,8 +1210,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16efaeffccb879a4b876ae141343a6da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  endPath: 0
   fieldOfVisionForShooting: 60
---- !u!114 &6057064146071655580
+--- !u!114 &4222915115163930566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4991602012080028585}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b435a2b27a6a41b4b80f7c7af7884e10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolBehaviour: {fileID: 3544160473902521827}
+  shootBehaviour: {fileID: 8822990268845550141}
+  detector: {fileID: 4383938330390865876}
+  tankController: {fileID: 3713329460465827817}
+  mainCamera: {fileID: 0}
+  obstacles: {fileID: 0}
+  threshold: 3
+  OnMoveBody:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3713329460465827817}
+        m_MethodName: HandleMoveBodyAI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &3544160473902521827
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1152,12 +1254,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4991602012080028585}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63a7aec4ceb913946b91fffa354868bb, type: 3}
+  m_Script: {fileID: 11500000, guid: fa26f4ea25e46154f9be9c29330881ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolDelay: 4
-  randomDirection: {x: 0, y: 0}
-  currentPatrolDelay: 0
+  endPath: 0
+  patrolPath: {fileID: 8287294951233686403}
+  arriveDistance: 0.3
+  waitTime: 0.3
+  isWaiting: 0
+  currentPatrolTarget: {x: 0, y: 0}
 --- !u!1 &5720224764562443757
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,7 +1275,7 @@ GameObject:
   - component: {fileID: 5779728791754299542}
   - component: {fileID: 5977119935646220208}
   - component: {fileID: 7127233560820042324}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: MuzzleFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1283,7 +1388,7 @@ GameObject:
   - component: {fileID: 376947033012509978}
   - component: {fileID: 616596057481523989}
   - component: {fileID: 1171009779721764417}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: DeathFeedback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1344,7 +1449,7 @@ GameObject:
   - component: {fileID: 585327609848573750}
   - component: {fileID: 2069464351032268090}
   - component: {fileID: 3097729837415202061}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: TrackMarksSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1408,7 +1513,7 @@ GameObject:
   - component: {fileID: 2081952431798876904}
   - component: {fileID: 5870228667695334796}
   - component: {fileID: 3618417167753897286}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1428,7 +1533,7 @@ RectTransform:
   m_Children:
   - {fileID: 8879944638372898876}
   m_Father: {fileID: 4991602012080028598}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1480,7 +1585,7 @@ GameObject:
   - component: {fileID: 6361920824572531188}
   - component: {fileID: 7937840233850483743}
   - component: {fileID: 8994521409062820261}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: HealthFillPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}

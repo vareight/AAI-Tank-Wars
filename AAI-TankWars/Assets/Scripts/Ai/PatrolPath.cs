@@ -38,8 +38,14 @@ public class PatrolPath : MonoBehaviour
 
     public PathPoint GetNextPathPoint(int index)
     {
-        var newIndex = index + 1 >= patrolPoints.Count ? 0 : index + 1;
+        //var newIndex = index + 1 >= patrolPoints.Count ? 0 : index + 1;
+        var newIndex = index + 1;
         return new PathPoint { Index = newIndex, Position = patrolPoints[newIndex].position };
+    }
+
+    public void DeletePreviousPathPoint(int index)
+    {
+        patrolPoints.Remove(patrolPoints[index]);
     }
 
 

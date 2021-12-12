@@ -21,10 +21,14 @@ public class Turret : MonoBehaviour
     public UnityEvent OnShoot, OnCantShoot;
     public OnReloadingEvent OnReloading;
 
+    public TankController turretOwner;
+
     private void Awake()
     {
         tankColliders = GetComponentsInParent<Collider2D>();
         bulletPool = GetComponent<ObjectPool>();
+        turretOwner = GetComponentInParent<TankController>();
+        //Debug.Log(turretOwner.ToString());
     }
 
     private void Start()
@@ -56,13 +60,13 @@ public class Turret : MonoBehaviour
             foreach (var barrel in turretBarrels)
             {
                 var hit = Physics2D.Raycast(barrel.position, barrel.up);
-                if (hit.collider != null)
-                    Debug.Log(hit.collider.name);
+                //if (hit.collider != null)
+                  //  Debug.Log(hit.collider.name);
                 //GameObject bullet = Instantiate(bulletPrefab);
                 GameObject bullet = bulletPool.CreateObject();
                 bullet.transform.position = barrel.position;
                 bullet.transform.localRotation = barrel.rotation;
-                bullet.GetComponent<Bullet>().Initialize(turretData.bulletData);
+                bullet.GetComponent<Bullet>().Initialize(turretData.bulletData, turretOwner);
 
                 foreach (var collider in tankColliders)
                 {

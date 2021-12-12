@@ -13,16 +13,19 @@ public class Bullet : MonoBehaviour
 
     public UnityEvent OnHit = new UnityEvent();
 
+    public TankController bulletOwner;
+
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
     }
 
-    public void Initialize(BulletData bulletData)
+    public void Initialize(BulletData bulletData, TankController bulletOwner)
     {
         this.bulletData = bulletData;
         startPosition = transform.position;
         rb2d.velocity = transform.up * this.bulletData.speed;
+        this.bulletOwner = bulletOwner;
     }
 
     private void Update()
@@ -47,9 +50,10 @@ public class Bullet : MonoBehaviour
         if (damagable != null)
         {
             damagable.Hit(bulletData.damage);
-            //damagable.Heal(bulletData.damage);
+            bulletOwner.DmgDealt += bulletData.damage;
+            if (damagable.Health <= 0)
+                bulletOwner.TankKilled++;
         }
-
         DisableObject();
     }
 }

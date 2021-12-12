@@ -188,6 +188,21 @@ PrefabInstance:
       propertyPath: MaxHealth
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 1646958841755428217, guid: 1bc84e9af9a0a6d47bd8effb1f57bb82,
+        type: 3}
+      propertyPath: OnDead.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1646958841755428217, guid: 1bc84e9af9a0a6d47bd8effb1f57bb82,
+        type: 3}
+      propertyPath: OnDead.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8414966680171557456}
+    - target: {fileID: 1646958841755428217, guid: 1bc84e9af9a0a6d47bd8effb1f57bb82,
+        type: 3}
+      propertyPath: OnDead.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
     - target: {fileID: 1855926334966159133, guid: 1bc84e9af9a0a6d47bd8effb1f57bb82,
         type: 3}
       propertyPath: m_Layer
@@ -201,7 +216,7 @@ PrefabInstance:
     - target: {fileID: 2575475115017167553, guid: 1bc84e9af9a0a6d47bd8effb1f57bb82,
         type: 3}
       propertyPath: m_Name
-      value: PatrolingEnemy
+      value: PatrolingEnemy Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2575475115017167553, guid: 1bc84e9af9a0a6d47bd8effb1f57bb82,
         type: 3}

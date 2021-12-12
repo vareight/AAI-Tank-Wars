@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: BoostTankMovementData
   m_EditorClassIdentifier: 
   maxSpeed: 100
-  rotationSpeed: 200
-  acceleration: 100
-  deacceleration: 80
+  rotationSpeed: 5

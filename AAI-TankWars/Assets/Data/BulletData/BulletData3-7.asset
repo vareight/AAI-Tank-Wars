@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BulletData3-7
   m_EditorClassIdentifier: 
   speed: 2
-  damage: 7
+  damage: 5
   maxDistance: 20
