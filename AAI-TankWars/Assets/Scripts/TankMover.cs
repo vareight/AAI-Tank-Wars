@@ -291,7 +291,16 @@ public class TankMover : MonoBehaviour
 
     public void HandleMovement(Vector2 movementVector)
     {
-
+        /* Decomment for delay in the rotation
+         * 
+        float actualRotation = Vector2.SignedAngle(Vector2.up, this.tankController.transform.up);
+        if (targetRotation == 180 && actualRotation < 0) actualRotation = -actualRotation;
+        if (Mathf.Abs(targetRotation - actualRotation) > 5)
+        {
+            return;
+        }
+        */
+        Debug.DrawLine(this.tankController.transform.position, (Vector2)this.tankController.transform.position+movementVector, Color.red, 0.5f);
         if (movementVector == Vector2.zero)
         {
             Move(movementVector);
@@ -375,7 +384,7 @@ public class TankMover : MonoBehaviour
         {
             currentForewardDirection = 0;
         }
-        //Debug.DrawLine(this.tankController.transform.position, movementVector, Color.red, 3f);
+        //Debug.DrawLine(this.tankController.transform.position, movementVector, Color.red, 0.5f);
     }
 
     /*private void CalculateSpeed(Vector2 movementVector)

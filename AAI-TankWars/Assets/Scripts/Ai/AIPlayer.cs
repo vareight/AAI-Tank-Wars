@@ -9,7 +9,7 @@ using Debug = UnityEngine.Debug;
 
 public class AIPlayer : UnitController
 {
-    private const int NUM_SENSORS = 128;
+    private const int NUM_SENSORS = 8;
     private const int INDEX_OBSTACLE = 0;
     private const int INDEX_TANK = 1;
     private const int INDEX_BULLET = 2;
@@ -55,6 +55,10 @@ public class AIPlayer : UnitController
     private NeatSupervisor neatObject;
 
     private Stopwatch timer;
+    private int[] sensorsMask = new int[NUM_SENSORS];
+
+    private List<GameObject> currentDangerousBullets;
+    private List<GameObject> totDangerousBullets;
 
     // (x,y)
     /*private Vector2[] directions = { new Vector2(-1, 1).normalized, new Vector2(-0.5f,1).normalized, Vector2.up.normalized,
@@ -68,6 +72,8 @@ public class AIPlayer : UnitController
 
     public int bonusBulletsDodged = 0;
     public int totBulletsIncoming = 0;
+    public float bonusSafePosition = 0;
+
 
     private void Start()
     {
@@ -76,10 +82,9 @@ public class AIPlayer : UnitController
         _initialPosition = tank.transform.position;
         _initialRotation = tank.transform.rotation;
         enemyTanks = GameObject.FindGameObjectsWithTag("Enemy");
-        bullets = GameObject.FindGameObjectsWithTag("Bullet");
         GameObject neatGameObj = GameObject.FindGameObjectWithTag("Neat");
         if (neatGameObj != null)
-            neatObject = neatGameObj.GetComponent<NeatSupervisor>() as NeatSupervisor; 
+            neatObject = neatGameObj.GetComponent<NeatSupervisor>() as NeatSupervisor;
         /*totHealth = 0f;
         foreach (GameObject tank in enemyTanks)
         {
@@ -102,14 +107,17 @@ public class AIPlayer : UnitController
         InitializeSensors();
         float x, y;
         float alpha = 360 / (float)NUM_SENSORS;
-        
+
         for (int s = 0; s < NUM_SENSORS; s++)
         {
-            x = Mathf.Sin(Mathf.Deg2Rad*alpha * s);
-            y = Mathf.Cos(Mathf.Deg2Rad*alpha * s);
-            directions[s] = new Vector2(x,y).normalized;
+            x = Mathf.Sin(Mathf.Deg2Rad * alpha * s);
+            y = Mathf.Cos(Mathf.Deg2Rad * alpha * s);
+            directions[s] = new Vector2(x, y).normalized;
             //Debug.Log("alpha= " + alpha*s+ "("+x+","+y+")");
+            sensorsMask[s] = 0;
         }
+        currentDangerousBullets = new List<GameObject>();
+        totDangerousBullets = new List<GameObject>();
     }
 
     private void Awake()
@@ -125,7 +133,12 @@ public class AIPlayer : UnitController
     private void Update()
     {
         totVelocity += this.tank.tankMover.rb2d.velocity.magnitude;
+        //ResetSensorMask();
+        //BulletRadar();
         //Radar();
+        bonusSafePosition += CalculateSafePositions();
+        Debug.Log("Position: " + this.tank.transform.position);
+        //Debug.Log("Fitness: " + bonusSafePosition);
     }
 
     public void StopTimer()
@@ -134,6 +147,9 @@ public class AIPlayer : UnitController
         //Debug.Log("STOP");
     }
 
+    /* Does it make sense to use in the fitness function a map giving points depending on the position? What is the sense of the sensors then?
+     * è come elaborare gli input che diamo in pasto alla rete(?)
+     */
     public override float GetFitness()
     {
         // Called during the evaluation phase (at the end of each trail)
@@ -172,14 +188,15 @@ public class AIPlayer : UnitController
         float avgVelocity = totVelocity / neatObject.TrialDuration;
         //Debug.Log("avg velocity: " + avgVelocity);
         float timeAlive = (float)timer.Elapsed.TotalSeconds * Time.timeScale;
-        int bulletBonus = ((2 * bonusBulletsDodged - totBulletsIncoming)+1) * 10;
 
-        if (bulletBonus < 0) bulletBonus = 0;
-        
+        CalcolaBonusDodged();
+        //Debug.Log("Dodges: " + bonusBulletsDodged);
+
         //Debug.Log("Time Alive: " + timeAlive);
         //Debug.Log("Delta Time: " + Time.fixedDeltaTime);
-        float result = this.damageble.Health + this.tank.DmgDealt + this.tank.TankKilled * 10 + (5 - this.tank.ObstaclesHit) * 20 + timeAlive + bulletBonus + avgVelocity;
-        result /= 2f;
+        //float result = this.damageble.Health + this.tank.DmgDealt + this.tank.TankKilled * 10 + (5 - this.tank.ObstaclesHit) * 20 + timeAlive + bulletBonus;
+        //float result = this.damageble.Health + (5 - this.tank.ObstaclesHit) * 10 + bonusBulletsDodged*5;
+        float result = bonusBulletsDodged;
         if (result < 0)
             return 0;
         else
@@ -202,6 +219,7 @@ public class AIPlayer : UnitController
             this.tank.transform.rotation = _initialRotation;
 
             ResetSensors();
+            ResetSensorMask();
             this.damageble.Health = this.damageble.MaxHealth;
             this.tank.DmgDealt = 0;
             this.tank.TankKilled = 0;
@@ -213,6 +231,9 @@ public class AIPlayer : UnitController
             this.bonusBulletsDodged = 0;
             this.totBulletsIncoming = 0;
             int i = 0;
+            this.currentDangerousBullets = new List<GameObject>();
+            this.totDangerousBullets = new List<GameObject>();
+            this.damageble.Hits = 0;
 
             TankController tankBody;
             foreach (GameObject tt in enemyTanks)
@@ -257,7 +278,10 @@ public class AIPlayer : UnitController
 
         //Inputs: 8 sensors for distance from objects x 3 different objects
 
+        ResetSensorMask();
+        BulletRadar();
         Radar();
+
         //IncomingDanger();
         // modify the ISignalArray object of the blackbox that was passed into this function, by filling it with the sensor information.
         // Make sure that NeatSupervisor.NetworkInputCount fits the amount of sensors you have
@@ -291,10 +315,30 @@ public class AIPlayer : UnitController
         //var shootingX = (float)outputSignalArray[3] * 2 - 1;
         //var shootingY = (float)outputSignalArray[4] * 2 - 1;
 
-        var shootAction = (float)outputSignalArray[0] * 2 - 1; // *********THIS IS OK*************
+        //var shootAction = (float)outputSignalArray[0] * 2 - 1; // *********THIS IS OK*************
         //var dodgeAction = (float)outputSignalArray[3] * 2 - 1;
-        var moveToX = (float)outputSignalArray[1] * 2 - 1;
-        var moveToY = (float)outputSignalArray[2] * 2 - 1;
+        //var moveToX = (float)outputSignalArray[1] * 2 - 1; // *********THIS IS OK*************
+        //var moveToY = (float)outputSignalArray[2] * 2 - 1; // *********THIS IS OK*************
+
+        double maxOutput = -1f;
+        int maxIndex = -1;
+        for(int i =0; i<outputSignalArray.Length; i++)
+        {
+            if (outputSignalArray[i] > maxOutput)
+            {
+                maxOutput = outputSignalArray[i];
+                maxIndex = i;
+            }
+        }
+
+        if (maxIndex == 8) // don't move
+        {
+            this.tank.HandleMoveBody(Vector2.zero);
+        }
+        else // move in one of the 8 directions
+        {
+            this.tank.HandleMoveBody(directions[maxIndex]);
+        }
 
         //var moveDist = moveToX * tankMover.movementData.acceleration * Time.fixedDeltaTime;
         //var turnAngle = moveToY * tankMover.movementData.rotationSpeed * Time.fixedDeltaTime * moveDist;
@@ -305,10 +349,10 @@ public class AIPlayer : UnitController
         //float shootingAngleX = Mathf.Cos(shootingAngle);
         //float shootingAngleY = Mathf.Sin(shootingAngle);
 
-        Vector2 moveTo = new Vector2(moveToX, moveToY);
+        //Vector2 moveTo = new Vector2(moveToX, moveToY); // *********THIS IS OK*************
         //Vector2 shootTo = new Vector2(shootingX, shootingY);
 
-        this.tank.HandleMoveBody(moveTo);
+        //this.tank.HandleMoveBody(moveTo); // *********THIS IS OK*************
         //tank.HandleTurretMovement(shootTo);
         // *********THIS IS OK*************
         /*if (shootAction < 0.5)
@@ -331,57 +375,40 @@ public class AIPlayer : UnitController
         //}
     }
 
-
-    private void IncomingDanger(RaycastHit2D dangerHit, int sensorPosition)
+    private int GetIncomingDangerSector(GameObject bullet)
     {
-        // OLD VERSION
-        /*RaycastHit2D hit;
-        bullets = GameObject.FindGameObjectsWithTag("Bullet");
-        foreach (GameObject bullet in bullets)
-        {
-            hit = Physics2D.Raycast(bullet.transform.position, bullet.transform.up, SensorRange);
-            //Debug.DrawRay(bullet.transform.position, bullet.transform.up * SensorRange, Color.red, 1f);
-            if (hit.collider != null)
-            {
-                if (hit.collider.transform == this.tank.transform)
-                {
-                    Debug.Log("Incoming Danger at " + hit.distance);
-                    sensors[sensorPosition][INDEX_BULLET] = hit.fraction;
-                }
-            }
-        }*/
+        int result = 0;
+        Vector2 dir = bullet.transform.position - this.tank.transform.position;
 
-        if (dangerHit.collider == null)
-        {    // no bullet detected from the Radar() function
-            if (sensors[sensorPosition][INDEX_BULLET] > 0.15f) bonusBulletsDodged++;
-            sensors[sensorPosition][INDEX_BULLET] = 0;
-        }
-        else                                // bullet detected from the Radar() function
+        //Debug.DrawLine(this.tank.transform.position, bullet.transform.position, Color.red, 2f);
+        float alpha = -Vector2.SignedAngle(Vector2.up, dir);
+        if (alpha < 0) alpha += 360;
+        //Debug.Log("alpha = " + alpha);
+
+        float alphaSector = 360 / (float)NUM_SENSORS;
+
+        for (int s = 0; s < NUM_SENSORS; s++)
         {
-            //Debug.Log("Bullet Detected!");
-            RaycastHit2D hit = Physics2D.Raycast(dangerHit.collider.transform.position, dangerHit.collider.transform.up, SensorRange);
-            //Debug.DrawRay(dangerHit.collider.transform.position, dangerHit.collider.transform.up * SensorRange, Color.red, 1f);
-            if (hit.collider != null)       // bullet raycast colliding with something
+            if (alpha >= alphaSector * s && alpha <= alphaSector * (s + 1))
             {
-                if (hit.collider.transform == this.tank.transform)      // collision with the AI tank -> DANGER!
-                {
-                    //Debug.Log("Incoming Danger at " + hit.distance);
-                    if (sensors[sensorPosition][INDEX_BULLET] == 0) totBulletsIncoming++;
-                    sensors[sensorPosition][INDEX_BULLET] = hit.fraction;
-                }
-                else                                                    // collision with something else -> we don't care
-                {
-                    //Debug.Log("Not a danger..");
-                    if (sensors[sensorPosition][INDEX_BULLET] > 0.15f) bonusBulletsDodged++;
-                    sensors[sensorPosition][INDEX_BULLET] = 0;
-                }
+                result = s;
+                break;
             }
-            else
-            {                           // bullet raycast no collision
-                if (sensors[sensorPosition][INDEX_BULLET] > 0.15f) bonusBulletsDodged++;
-                sensors[sensorPosition][INDEX_BULLET] = 0;
-            }
+            //Debug.Log("alpha= " + alpha*s+ "("+x+","+y+")");
         }
+        return result;
+    }
+
+    private void IncomingDanger(GameObject bullet)
+    {
+        Debug.DrawRay(bullet.transform.position, bullet.transform.up * SensorRange, Color.yellow, 0.1f);
+
+        if (!totDangerousBullets.Contains(bullet))      // first time this bullet is dangerous for the AI tank
+        {
+            totBulletsIncoming++;
+            totDangerousBullets.Add(bullet);
+        }
+        currentDangerousBullets.Add(bullet);
     }
 
     private int CheckCollision(RaycastHit2D hit)
@@ -406,6 +433,189 @@ public class AIPlayer : UnitController
         return -1;
     }
 
+    private void CalcolaBonusDodged()
+    {
+        bonusBulletsDodged = 0;
+        foreach (GameObject bullet in totDangerousBullets)
+        {
+            if (!currentDangerousBullets.Contains(bullet))
+            {
+                bonusBulletsDodged++;
+            }
+        }
+        bonusBulletsDodged -= this.damageble.Hits;
+    }
+
+    private void BulletRadar()
+    {
+        currentDangerousBullets = new List<GameObject>();
+        
+        bullets = GameObject.FindGameObjectsWithTag("Bullet");      // find all the bullets on the scene
+        foreach (GameObject bullet in bullets)
+        {
+            //Debug.Log("Detected Bullet");
+
+            RaycastHit2D[] hits = Physics2D.RaycastAll(bullet.transform.position, bullet.transform.up, SensorRange);
+
+            if (hits.Length != 0) // at least 1 hit
+            {
+                foreach (RaycastHit2D hit in hits)
+                {
+
+                    if (hit.collider != null)       // bullet raycast colliding with something
+                    {
+                        if (hit.collider.transform == this.tank.transform)      // collision with the AI tank -> DANGER!
+                        {
+
+                            IncomingDanger(bullet);
+                            //Debug.Log("Incoming Danger at " + hit.distance);
+                            //if (sensors[sensorPosition][INDEX_BULLET] == 0) totBulletsIncoming++;
+                            //sensors[sensorPosition][INDEX_BULLET] = hit.fraction;
+                            int sector = GetIncomingDangerSector(bullet);
+                            //Debug.Log("Sector = " + sector);
+                            if (sensors[sector][INDEX_BULLET] < hit.fraction)     // update with the lower value of hit.fraction (distance)
+                                sensors[sector][INDEX_BULLET] = hit.fraction;
+                            //sensorsMask[sector] = 1;
+                            Debug.DrawRay(this.tank.transform.position, directions[sector], Color.white, 1f);
+                            Debug.DrawRay(this.tank.transform.position, directions[(sector + 1) % NUM_SENSORS], Color.white, 1f);
+
+                        }
+                        else                                                    // collision with something else -> we don't care
+                        {
+                            //Debug.Log("Not a danger..");
+                            //if (sensors[sensorPosition][INDEX_BULLET] > 0.05f) bonusBulletsDodged++;
+                            //sensors[sensorPosition][INDEX_BULLET] = 0;
+                        }
+                    }
+                    else
+                    {                           // bullet raycast no collision
+                                                //if (sensors[sensorPosition][INDEX_BULLET] > 0.05f) bonusBulletsDodged++;
+                                                //sensors[sensorPosition][INDEX_BULLET] = 0;
+                    }
+                }
+            }
+            CalcolaBonusDodged();
+
+        }
+
+        //CalcolaBonusDodged();
+
+        /*for (int i = 0; i < NUM_SENSORS; i++)
+        {
+            if (sensorsMask[i] == 0)
+            {
+                if (sensors[i][INDEX_BULLET] > 0.08f) bonusBulletsDodged++;
+                sensors[i][INDEX_BULLET] = 0;
+            }
+        }*/
+    }
+
+    private float CalculateSafePositions()
+    {
+        bullets = GameObject.FindGameObjectsWithTag("Bullet");      // find all the bullets on the scene
+        Dictionary<Vector2, float> mapRisks = new Dictionary<Vector2, float>();
+        foreach (GameObject bullet in bullets)
+        {
+            //ray = Physics2D.Raycast(bullet.transform.position, bullet.transform.up, SensorRange, LayerMask.NameToLayer("Nothing"));
+            for (int i = 0; i<50; i++)
+            {
+                Vector2 nextBulletPosition = bullet.transform.position + bullet.transform.up *i/10f ; //bullet line until a distance of 5
+                nextBulletPosition.x = Mathf.Round(nextBulletPosition.x * 100.0f) * 0.01f;
+                nextBulletPosition.y = Mathf.Round(nextBulletPosition.y * 100.0f) * 0.01f;
+                if (mapRisks.ContainsKey(nextBulletPosition))
+                {
+                    if (mapRisks[nextBulletPosition] > i / 50f)
+                    {
+                        mapRisks[nextBulletPosition] = i / 50f;
+                    }
+                }
+                else
+                {
+                    mapRisks.Add(nextBulletPosition, i / 50f);
+                }
+                //Debug.DrawLine(nextBulletPosition, nextBulletPosition + (Vector2)bullet.transform.up*0.1f, Color.yellow, 0.1f);
+            }
+        }
+        String s = "";
+        foreach(Vector2 riskPosition in mapRisks.Keys)
+        {
+           s += "Risk position: " + riskPosition + ", safeness: " + mapRisks[riskPosition]+"\n";
+            
+        }
+
+        Debug.Log(s);
+
+        float result;
+
+        //Debug.Log("TANK POSITION: "+ this.tank.transform.position);
+
+        if (CheckTankDimensions(mapRisks, out Vector2 tankPosition))
+        {
+            Debug.Log("Collision incoming at "+ tankPosition);
+            result = mapRisks[tankPosition];
+        }
+        else
+        {
+            result = 0;
+        }
+
+        //Debug.Log("Result = " + result);
+        return result;
+    }
+
+    private bool CheckTankDimensions(Dictionary<Vector2, float> mapRisks, out Vector2 tankPosition)
+    {
+        float step = 0.1f;
+        Vector2 position = this.tank.transform.position;
+        Vector2 posTopRight, posTopLeft, posBottomRight, posBottomLeft;
+        for (int i = 0; i<4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                posTopRight = new Vector2(position.x + step * i, position.y + step * j);
+                posTopLeft = new Vector2(position.x - step * i, position.y + step * j);
+                posBottomRight = new Vector2(position.x + step * i, position.y - step * j);
+                posBottomLeft = new Vector2(position.x - step * i, position.y - step * j);
+                Debug.Log("Neigh: " + posTopRight);
+                Debug.Log("Neigh: " + posTopLeft);
+                Debug.Log("Neigh: " + posBottomRight);
+                Debug.Log("Neigh: " + posBottomLeft);
+
+                posTopRight.x = Mathf.Round(posTopRight.x * 100.0f) * 0.01f;
+                posTopRight.y = Mathf.Round(posTopRight.y * 100.0f) * 0.01f;
+                posTopLeft.x = Mathf.Round(posTopLeft.x * 100.0f) * 0.01f;
+                posTopLeft.y = Mathf.Round(posTopLeft.y * 100.0f) * 0.01f;
+                posBottomRight.x = Mathf.Round(posBottomRight.x * 100.0f) * 0.01f;
+                posBottomRight.y = Mathf.Round(posBottomRight.y * 100.0f) * 0.01f;
+                posBottomLeft.x = Mathf.Round(posBottomLeft.x * 100.0f) * 0.01f;
+                posBottomLeft.y = Mathf.Round(posBottomLeft.y * 100.0f) * 0.01f;
+                
+                if (mapRisks.ContainsKey(posTopRight))
+                {
+                    tankPosition = posTopRight;
+                    return true;
+                }
+                if (mapRisks.ContainsKey(posTopLeft))
+                {
+                    tankPosition = posTopLeft;
+                    return true;
+                }
+                if (mapRisks.ContainsKey(posBottomRight))
+                {
+                    tankPosition = posBottomRight;
+                    return true;
+                }
+                if (mapRisks.ContainsKey(posBottomLeft))
+                {
+                    tankPosition = posBottomLeft;
+                    return true;
+                }
+            }
+        }
+        tankPosition = default;
+        return false;
+    }
+
     private void Radar()
     {
         // 16 raycasts into different directions each measure how far a object is away.
@@ -419,7 +629,7 @@ public class AIPlayer : UnitController
          */
 
         //Debug.Log("Tank position = " + this.tank.transform.position);
-        RaycastHit2D hit, dangerHit;
+        RaycastHit2D hit;
         int index;
 
 
@@ -428,14 +638,9 @@ public class AIPlayer : UnitController
         foreach (Vector2 v in directions)
         {
             hit = Physics2D.Raycast(this.tank.transform.position, v, SensorRange, visibilityLayer);
-            dangerHit = Physics2D.Raycast(this.tank.transform.position, v, SensorRange, dangerLayer);
 
-            IncomingDanger(dangerHit, sensorPosition);
-            /*if (sensors[sensorPosition][INDEX_BULLET] != 0)
-            {
-                Debug.DrawRay(this.tank.transform.position, v, Color.red, 1f);
-            }*/
             //Debug.DrawRay(this.tank.transform.position, v*10, Color.red, 1f);
+
 
             index = CheckCollision(hit);
             if (index != -1)
@@ -487,6 +692,14 @@ public class AIPlayer : UnitController
             {
                 sensors[i][j] = 0;
             }
+        }
+    }
+
+    private void ResetSensorMask()
+    {
+        for (int i = 0; i < NUM_SENSORS; i++)
+        {
+            sensorsMask[i] = 0;
         }
     }
 

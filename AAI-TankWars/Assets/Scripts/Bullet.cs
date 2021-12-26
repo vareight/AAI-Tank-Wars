@@ -35,6 +35,7 @@ public class Bullet : MonoBehaviour
         {
             DisableObject();
         }
+        //Debug.Log("Bullet position: " + this.transform.position);
     }
 
     private void DisableObject()
@@ -54,6 +55,9 @@ public class Bullet : MonoBehaviour
             if (damagable.Health <= 0)
                 bulletOwner.TankKilled++;
         }
-        DisableObject();
+        else
+        {
+            DisableObject();
+        }
     }
 }

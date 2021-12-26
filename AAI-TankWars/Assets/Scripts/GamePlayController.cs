@@ -12,7 +12,7 @@ public class GamePlayController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Time.timeScale = 2f;
+        Time.timeScale = 3f;
         Time.fixedDeltaTime = Time.fixedDeltaTime * Time.timeScale;
     }
 }
